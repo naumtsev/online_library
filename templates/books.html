@@ -40,8 +40,16 @@
        }
 
        .onestand{
-            margin-top:30px;
-            margin-left:15%;
+
+             margin-top:30px;
+            {% if "username" in session %}
+
+             margin-left:15%;
+            {% else %}
+
+             margin-left:18%;
+            {% endif %}
+
        }
     </style>
 
