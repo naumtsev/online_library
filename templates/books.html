@@ -46,10 +46,10 @@
     </style>
 
     <br/>
-    <center>
-       <a style="font-size:42px; font-weight:900;"> Книжная коллекция </a>
 
-        <center>
+       <a style="font-size:42px; font-weight:900;margin-left:40%"> Книжная коллекция </a>
+
+
 
 
 
@@ -69,7 +69,11 @@
                                   </div>
 
                     </div>
-             <a href="/delete/{{id}}" style="color:black;font-size:15px;border: 1px solid black; padding-left:5px;padding-right:5px;margin-left:3px;"> Удалить </a>
+
+                    {% if "username" in session %}
+                        <a href="/delete/{{id}}" style="color:black;font-size:15px;border: 1px solid black; padding-left:5px;padding-right:5px;margin-left:3px;"> Удалить </a>
+                    {% endif %}
+
                 {% endfor %}
             </div>
         </div>

@@ -10,7 +10,7 @@
 
 <style>
  body {
-    background-image: url(static/fon.jpg);
+    background-image: url(../static/fon.jpg);
     background-color: white;
    }
  </style>
@@ -19,9 +19,16 @@
 
     <header>
       <nav class="navbar navbar-dark bg-dark">
+
                         <a class="navbar-brand" href="/">Библиотека</a>
-                        <a class="navbar-brand" href="/add_new_book">Добавить книгу</a>
-                        <a class="navbar-brand" href="#">Выйти из аккаунта</a>
+
+                        {% if "username" in session %}
+                            <a class="navbar-brand" href="/add_new_book">Добавить книгу</a>
+                            <a class="navbar-brand" href="/logout">Выйти из {{ session["username"]}}</a>
+                        {% else %}
+                            <a class="navbar-brand" href="/login"> Войти </a>
+                        {% endif %}
+
       </nav>
     </header>
 

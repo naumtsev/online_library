@@ -10,7 +10,7 @@ from wtforms.validators import DataRequired, Email
 from flask_sqlalchemy import SQLAlchemy
 import random
 import time
-from database import BOOKS
+from database import BOOKS, USERS
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'e70lIUUoXRKlXc5VUBmiJ9Hdi'
@@ -23,19 +23,13 @@ def index():
     all_books = BOOKS.get_all()
     cnt = 0
     buffer = [[]]
-
     for i in all_books:
         cnt += 1;
         buffer[-1].append((i[0], i[1], i[2]))
-
         if cnt == 3:
             cnt = 0
             buffer.append([])
-
-    return render_template('books.html', BOOKS = buffer)
-
-
-print(BOOKS.get_all())
+    return render_template('books.html', BOOKS = buffer, session=session)
 
 class AddBookForm(FlaskForm):
     booktitle = StringField('Название книги:', validators=[DataRequired()], widget=TextInput())
@@ -46,6 +40,9 @@ class AddBookForm(FlaskForm):
 
 @app.route('/add_new_book', methods=['POST', 'GET'])
 def add_new_book():
+    if not 'username' in session:
+        return redirect('/')
+
     form = AddBookForm()
     if form.validate_on_submit():
         booktitle = form.booktitle.data
@@ -61,7 +58,7 @@ def add_new_book():
             image.save('static/images/1.jpg')
 
         return redirect('/')
-    return render_template('add_new_book.html', form=form)
+    return render_template('add_new_book.html', form=form, session=session)
 
 
 
@@ -77,15 +74,54 @@ def readbook(id):
 
 @app.route('/delete/<id>', methods=['POST', 'GET'])
 def deletebook(id):
-    print(id)
+    if not 'username' in session:
+        return redirect('/')
+
     now_book = BOOKS.get(id)
     if not now_book:
        return redirect('/')
 
     os.remove("static/images/{}.jpg".format(id))
     BOOKS.delete(id)
-    return redirect('/')
+    return redirect('/', session=session)
 
+
+
+class LoginForm(FlaskForm):
+    username = StringField('Login:', validators=[DataRequired()], widget=TextInput())
+    password = StringField('Password:', validators=[DataRequired()], widget=TextInput())
+    submit = SubmitField('Отправить')
+
+
+@app.route('/login', methods=['POST', 'GET'])
+def login():
+    if 'username' in session:
+        return redirect('/')
+    form = LoginForm()
+
+    if form.validate_on_submit():
+        login = form.username.data
+        password = form.password.data
+        user = USERS.get(login)
+        print(user)
+        if(user):
+            print(user)
+            if user[2] == password:
+                print(1)
+                session['username'] = login
+                return redirect('/')
+            else:
+                print('2332')
+                return render_template('login.html', session=session, form=form, status=1)
+        else:
+            return render_template('login.html', session=session, form=form, status=1)
+    return render_template('login.html', session=session, form=form, status=0)
+
+@app.route('/logout')
+def logout():
+    session.pop('username',0)
+    print(1)
+    return redirect('/')
 
 DEBUG = True
 if DEBUG:

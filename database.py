@@ -68,7 +68,51 @@ class BookModel:
             data.append((i[0], i[1]))
         return str()
 
+class UserModel:
+    def __init__(self, data_base):
+        self.connection = data_base.get_connection()
+        self.init_table()
+
+    def init_table(self):
+        cursor = self.connection.cursor()
+        cursor.execute('''CREATE TABLE IF NOT EXISTS users 
+                            (id INTEGER PRIMARY KEY AUTOINCREMENT, 
+                             username VARCHAR(50),
+                             password VARCHAR(128)
+                             )''')
+        cursor.close()
+        self.connection.commit()
+
+    def insert(self, username, password):
+        cursor = self.connection.cursor()
+        cursor.execute('''INSERT INTO users 
+                          (username, password) 
+                          VALUES (?, ?)''', (username, password,))
+        cursor.close()
+        self.connection.commit()
+
+    def get(self, username):
+        cursor = self.connection.cursor()
+        cursor.execute("SELECT * FROM users WHERE username = ?", (str(username),))
+        row = cursor.fetchone()
+        return row
+
+
+    def exist(self, username):
+        wp = self.get(username)
+        if(wp):
+            return wp
+        else:
+            return False
+
+    def __str__(self):
+        data = []
+        for i in self.get_all():
+            data.append((i[0], i[1]))
+        return str()
+
 
 my_db = DB()
 
 BOOKS = BookModel(my_db)
+USERS = UserModel(my_db)
