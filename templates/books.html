@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+    <style>
+        .myimg{
+           width:300px;
+           height:456px;
+        }
+
+        .blockofbooks{
+
+            display: flex;
+            flex-direction:row;
+            align-items: flex-start;
+        }
+
+        .flexbook{
+       flex-grow: 0;
+
+        }
+        .book{
+            margin-left:70px;
+        }
+         .booktitle{
+
+             width:290px;
+                color:black;
+             font-size:20px;
+             font-weight:600;
+        }
+        .author{
+            font-size:13px;
+        }
+
+       .library{
+            display: flex;
+            flex-direction:column;
+            align-items: flex-start;
+       }
+
+       .onestand{
+            margin-top:30px;
+            margin-left:15%;
+       }
+    </style>
+
+    <br/>
+    <center>
+       <a style="font-size:42px; font-weight:900;"> Книжная коллекция </a>
+
+        <center>
+
+
+
+    <div class="library">
+        {% for stand in BOOKS%}
+        <div class="onestand">
+            <div class="blockofbooks">
+                {% for id, title, author in stand %}
+                     <div class="flexbook">
+                            <a href="book/{{id}}">
+                                  <div class="book">
+                                       <img src="../static/images/{{id}}.jpg" class= "myimg"></a>
+                                <div class="booktitle">  <a href="book/{{id}}" class="booktitle">{{title}}</a> </div>
+                                        <a class="author"> Автор: {{author}}</a>
+
+
+                                  </div>
+
+                    </div>
+             <a href="/delete/{{id}}" style="color:black;font-size:15px;border: 1px solid black; padding-left:5px;padding-right:5px;margin-left:3px;"> Удалить </a>
+                {% endfor %}
+            </div>
+        </div>
+       <br/>
+        {% endfor %}
+    </div>
+
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+
+
+
+{% endblock%}
