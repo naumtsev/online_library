@@ -64,11 +64,9 @@ def add_new_book():
 
 @app.route('/book/<id>', methods=['POST', 'GET'])
 def readbook(id):
-    print(id)
     now_book = BOOKS.get(id)
     if not now_book:
        return redirect('/')
-    print(now_book)
     return render_template('readbook.html', id=now_book[0], booktitle=now_book[1], author=now_book[2], text=now_book[3])
 
 
@@ -103,11 +101,9 @@ def login():
         login = form.username.data
         password = form.password.data
         user = USERS.get(login)
-        print(user)
         if(user):
             print(user)
             if user[2] == password:
-                print(1)
                 session['username'] = login
                 return redirect('/')
             else:
