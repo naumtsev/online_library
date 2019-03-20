@@ -81,7 +81,7 @@ def deletebook(id):
 
     os.remove("static/images/{}.jpg".format(id))
     BOOKS.delete(id)
-    return redirect('/', session=session)
+    return redirect('/')
 
 
 
