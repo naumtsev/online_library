@@ -63,7 +63,7 @@ def add_new_book():
 
         resize_image(input_image_path=gg,
                      output_image_path=gg.replace('b', ''),
-                     size=(300, 456))
+                     size=(2 * 300, 2 * 456))
         os.remove(gg)
 
         return redirect('/')
@@ -134,7 +134,7 @@ def not_found_error(error):
     return render_template('error404.html', session=session), 404
 
 
-DEBUG = True
+DEBUG = False
 if DEBUG:
     if __name__ == '__main__':
         app.run(port=8082, host='127.0.0.1')
