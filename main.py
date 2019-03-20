@@ -119,7 +119,13 @@ def logout():
     print(1)
     return redirect('/')
 
-DEBUG = True
+@app.route('/error')
+@app.errorhandler(404)
+def not_found_error(error):
+    return render_template('error404.html', session=session), 404
+
+
+DEBUG = False
 if DEBUG:
     if __name__ == '__main__':
-        app.run(port=8080, host='127.0.0.1')
+        app.run(port=8082, host='127.0.0.1')
