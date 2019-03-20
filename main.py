@@ -11,6 +11,7 @@ from flask_sqlalchemy import SQLAlchemy
 import random
 import time
 from database import BOOKS, USERS
+from convert_img import resize_image
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'e70lIUUoXRKlXc5VUBmiJ9Hdi'
@@ -52,10 +53,18 @@ def add_new_book():
 
         BOOKS.insert(booktitle, author, content)
         all = BOOKS.get_all()
-        if(all):
-            image.save('static/images/{}.jpg'.format(all[-1][0]))
+        gg = ''
+        if (all):
+            image.save('static/images/{}b.jpg'.format(all[-1][0]))
+            gg = 'static/images/{}b.jpg'.format(all[-1][0])
         else:
-            image.save('static/images/1.jpg')
+            image.save('static/images/1b.jpg')
+            gg = 'static/images/1b.jpg'
+
+        resize_image(input_image_path=gg,
+                     output_image_path=gg.replace('b', ''),
+                     size=(300, 456))
+        os.remove(gg)
 
         return redirect('/')
     return render_template('add_new_book.html', form=form, session=session)
@@ -78,9 +87,9 @@ def deletebook(id):
     now_book = BOOKS.get(id)
     if not now_book:
        return redirect('/')
-
-    os.remove("static/images/{}.jpg".format(id))
     BOOKS.delete(id)
+    os.remove("static/images/{}.jpg".format(id))
+
     return redirect('/')
 
 
@@ -125,7 +134,7 @@ def not_found_error(error):
     return render_template('error404.html', session=session), 404
 
 
-DEBUG = False
+DEBUG = True
 if DEBUG:
     if __name__ == '__main__':
         app.run(port=8082, host='127.0.0.1')
